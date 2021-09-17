@@ -11,13 +11,12 @@
 以“单例模式为例”，讲解文档呈现如下样貌。
 
 ********
-# 单例模式
 
 ## 模式说明
+
 某些场景要求一个对象只能有一个实例，可以通过单例模式实现。由于只能有一个实例，因此该类的构造器必须用`private`修饰来禁止通过`new`操作符来新建实例。类内持有一个`private`修饰的本类类型的实例，又因为只能有一个实例，所以使其为类成员，如该类类名`Singleton`，可声明为：
 `private static Singleton instance;`
 通过类内的一个`public`修饰的`getIntance`方法来获取实例，该方法也是`static`的。根据实例产生的时机分为饿汉模式和懒汉模式，懒汉模式中有线程安全和不安全的写法。
-​
 
 **饿汉模式**
 类属性Singleton instance在声明时就实例化。
@@ -45,20 +44,20 @@ package com.yukiyama.pattern.creation;
  */
 public class SingletonDemo {
 
-	public static void main(String[] args) {
-		SingletonSimple s1 = SingletonSimple.getInstance();
-		SingletonSimple s2 = SingletonSimple.getInstance();
-		// 输出“true”，说明s1与s2是同一个实例
-		System.out.println(s1 == s2);
-		SingletonHungry s3 = SingletonHungry.getInstance();
-		SingletonHungry s4 = SingletonHungry.getInstance();
-		// 输出“true”，说明s3与s4是同一个实例
-		System.out.println(s3 == s4);
-		Singleton s5 = Singleton.getInstance();
-		Singleton s6 = Singleton.getInstance();
-		// 输出“true”，说明s3与s4是同一个实例
-		System.out.println(s5 == s6);
-	}
+    public static void main(String[] args) {
+        SingletonSimple s1 = SingletonSimple.getInstance();
+        SingletonSimple s2 = SingletonSimple.getInstance();
+        // 输出“true”，说明s1与s2是同一个实例
+        System.out.println(s1 == s2);
+        SingletonHungry s3 = SingletonHungry.getInstance();
+        SingletonHungry s4 = SingletonHungry.getInstance();
+        // 输出“true”，说明s3与s4是同一个实例
+        System.out.println(s3 == s4);
+        Singleton s5 = Singleton.getInstance();
+        Singleton s6 = Singleton.getInstance();
+        // 输出“true”，说明s3与s4是同一个实例
+        System.out.println(s5 == s6);
+    }
 
 }
 
@@ -67,15 +66,15 @@ public class SingletonDemo {
  * 在类加载时创建常量化实例，不存在多线程导致可能出现多个实例的问题
  */
 class SingletonHungry{
-	// 在定义SingletonHungry类型的属性时直接实例化，类内可以访问private构造器
-	private static final SingletonHungry instance = new SingletonHungry();
-	
-	// 将构造器声明为private，外部无法用new获取
-	private SingletonHungry() {}
-	// 外部通过一个public的getInstance()方法获取该类实例
-	public static SingletonHungry getInstance() {
-		return instance;
-	}
+    // 在定义SingletonHungry类型的属性时直接实例化，类内可以访问private构造器
+    private static final SingletonHungry instance = new SingletonHungry();
+    
+    // 将构造器声明为private，外部无法用new获取
+    private SingletonHungry() {}
+    // 外部通过一个public的getInstance()方法获取该类实例
+    public static SingletonHungry getInstance() {
+        return instance;
+    }
 }
 
 /**
@@ -83,25 +82,25 @@ class SingletonHungry{
  * 懒汉模式
  */
 class Singleton{
-	// 以volatile修饰
-	private static volatile Singleton instance;
-	
-	private Singleton() {}
-	public static Singleton getInstance() {
-		// 第一次判断的目的是避免每次getInstance()都加锁
-		// 若已经存在实例，直接返回
-		if(instance == null) {
-			synchronized (Singleton.class) {
-				// 再次判断是防止两个线程在instance==null时
-				// 同时进入第一个if内，由于加锁，其中一个先new了
-				// 实例，此时必须再判断一次防止第二个也new一个实例
-				if(instance == null) {
-					instance = new Singleton();
-				}
-			}
-		}
-		return instance;
-	}
+    // 以volatile修饰
+    private static volatile Singleton instance;
+    
+    private Singleton() {}
+    public static Singleton getInstance() {
+        // 第一次判断的目的是避免每次getInstance()都加锁
+        // 若已经存在实例，直接返回
+        if(instance == null) {
+            synchronized (Singleton.class) {
+                // 再次判断是防止两个线程在instance==null时
+                // 同时进入第一个if内，由于加锁，其中一个先new了
+                // 实例，此时必须再判断一次防止第二个也new一个实例
+                if(instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
 }
 
 /**
@@ -109,18 +108,18 @@ class Singleton{
  * 非线程安全版
  */
 class SingletonSimple {
-	private static SingletonSimple instance;
-	
-	// 将构造器声明为private，外部无法用new获取
-	private SingletonSimple() {}
-	// 外部通过一个public的getInstance()方法获取该类实例
-	public static SingletonSimple getInstance() {
-		// 每次获取前判断该类实例是否已存在，若无则new一个
-		if (instance != null) {
-			instance = new SingletonSimple();
-		}
-		return instance;
-	}
+    private static SingletonSimple instance;
+    
+    // 将构造器声明为private，外部无法用new获取
+    private SingletonSimple() {}
+    // 外部通过一个public的getInstance()方法获取该类实例
+    public static SingletonSimple getInstance() {
+        // 每次获取前判断该类实例是否已存在，若无则new一个
+        if (instance != null) {
+            instance = new SingletonSimple();
+        }
+        return instance;
+    }
 
 }
 ```
